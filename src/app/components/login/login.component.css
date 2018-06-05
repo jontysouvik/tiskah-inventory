@@ -1,0 +1,14 @@
+.centre{
+  text-align: center;
+  width: 100%;
+}
+.form-input{
+  width: 100%;
+}
+form{
+  margin-top: 25%;
+}
+button{
+  margin-left: 2%;
+  margin-right: 2%;
+}

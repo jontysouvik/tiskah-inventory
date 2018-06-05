@@ -8,6 +8,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ItemsComponent } from './components/items/items.component';
 import { ItemComponent } from './components/items/item/item.component';
 import { ItemListComponent } from './components/items/item-list/item-list.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ItemListComponent } from './components/items/item-list/item-list.compon
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
