@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
@@ -10,6 +11,18 @@ import { ItemComponent } from './components/items/item/item.component';
 import { ItemListComponent } from './components/items/item-list/item-list.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+
+const config = {
+  apiKey: 'AIzaSyDsM5D-igywBeKby4nCi8nnOJ2Sh4BULTs',
+  authDomain: 'tiskahinventory.firebaseapp.com',
+  databaseURL: 'https://tiskahinventory.firebaseio.com',
+  projectId: 'tiskahinventory',
+  storageBucket: 'tiskahinventory.appspot.com',
+  messagingSenderId: '21765455320'
+};
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +35,11 @@ import { AppRoutingModule } from './app-routing.module';
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AngularFireModule.initializeApp(config),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

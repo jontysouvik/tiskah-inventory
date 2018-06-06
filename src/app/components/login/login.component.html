@@ -6,15 +6,14 @@
         <div class="centre">
           <form class="centre">
             <mat-form-field class="form-input">
-              <input matInput placeholder="Email" type="email">
+              <input matInput placeholder="Email" type="email" name="email" [(ngModel)]="email">
             </mat-form-field>
             <br>
             <mat-form-field class="form-input">
-              <input matInput placeholder="Password" type="password" />
+              <input matInput placeholder="Password" type="password" name="password" [(ngModel)]="password">
             </mat-form-field>
             <br>
-            <button mat-raised-button>Reset</button>
-            <button mat-raised-button color="primary">Login</button>
+            <button mat-raised-button (click)="signIn()" color="primary">Login</button>
           </form>
         </div>
       </div>
