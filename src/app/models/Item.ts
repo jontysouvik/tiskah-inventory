@@ -4,4 +4,5 @@ export class Item {
   public price: number;
   public stock: number;
   public timestamp: string;
+  public isEdit: boolean;
 }

@@ -1,22 +1,47 @@
-List Item Component
-
 <div class="row">
-  <div class="col-md-3 col-3">
-    <h2>Item Code</h2>
+  <div class="col-md-2 col-2">
+    <h4>Code</h4>
   </div>
   <div class="col-md-3 col-3">
-    <h2>Name</h2>
+    <h4>Name</h4>
+  </div>
+  <div class="col-md-2 col-2">
+    <h4>Price</h4>
+  </div>
+  <div class="col-md-2 col-2">
+    <h4>Stock</h4>
   </div>
   <div class="col-md-3 col-3">
-    <h2>Price</h2>
-  </div>
-  <div class="col-md-3 col-3">
-    <h2>Stock</h2>
+    <h4>Action</h4>
   </div>
 </div>
 <div class="row" *ngFor="let item of items | async">
-  <div class="col-md-3 col-3">{{item.id}}</div>
-  <div class="col-md-3 col-3">{{item.name}}</div>
-  <div class="col-md-3 col-3">{{item.price}}</div>
-  <div class="col-md-3 col-3">{{item.stock}}</div>
+  <ng-container *ngIf="filter(item)">
+    <ng-container *ngIf="!item.isEdit">
+      <div class="col-md-2 col-2">{{item.id}}</div>
+      <div class="col-md-3 col-3">{{item.name}}</div>
+      <div class="col-md-2 col-2">{{item.price}}</div>
+      <div class="col-md-2 col-2">{{item.stock}}</div>
+      <div class="col-md-3 col-3">
+        <button (click)="setEdit(item)">Edit</button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="item.isEdit">
+      <div class="col-md-2 col-2">
+        <input type="text" [(ngModel)]="item.id">
+      </div>
+      <div class="col-md-3 col-3">
+        <input type="text" [(ngModel)]="item.name">
+      </div>
+      <div class="col-md-2 col-2">
+        <input type="text" [(ngModel)]="item.price">
+      </div>
+      <div class="col-md-2 col-2">
+        <input type="text" [(ngModel)]="item.stock">
+      </div>
+      <div class="col-md-3 col-3">
+        <button (click)="onEdit(item)">Save</button>
+      </div>
+    </ng-container>
+  </ng-container>
 </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { Item } from '../../models/Item';
 
 @Component({
   selector: 'app-items',
@@ -8,12 +9,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./items.component.css']
 })
 export class ItemsComponent implements OnInit {
-
+  selectedItem: Item = new Item();
+  public isShowAdd = false;
   constructor(private auth: AuthService, private router: Router) { }
 
   ngOnInit() {
     if (!this.auth.logInStatus) {
-        this.router.navigate(['/']);
+      this.router.navigate(['/']);
     }
   }
   logOut() {

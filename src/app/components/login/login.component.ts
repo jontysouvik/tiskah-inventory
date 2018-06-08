@@ -10,11 +10,13 @@ import { NgForm } from '@angular/forms';
 export class LoginComponent implements OnInit {
   public email;
   public password;
+  public showLoding = false;
   constructor(private auth: AuthService) { }
 
   ngOnInit() {
   }
   signIn() {
+    this.showLoding = true;
     this.auth.singInWithEmailAndPassword(this.email, this.password);
   }
 }

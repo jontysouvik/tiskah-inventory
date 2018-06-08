@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Item } from '../../../models/Item';
 import { Observable } from 'rxjs';
@@ -18,7 +18,10 @@ export class ItemComponent implements OnInit {
   }
   onAdd() {
     const date = new Date();
-    const time = date.getTime().toString();
+    let time = date.getTime().toString();
+    if (this.slectedItem.timestamp) {
+      time = this.slectedItem.timestamp;
+    }
     this.afs.collection('items').doc(time).set({
       'id': this.slectedItem.id,
       'name': this.slectedItem.name,
@@ -26,5 +29,9 @@ export class ItemComponent implements OnInit {
       'stock': this.slectedItem.stock,
       'timestamp': time.toString()
     });
+  }
+  itemSelected(item: Item) {
+    console.log(item, 'Item Component');
+    this.slectedItem = item;
   }
 }

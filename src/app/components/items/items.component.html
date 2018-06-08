@@ -1,3 +1,12 @@
 <button (click)="logOut()">Log out</button>
+<button id="btnShowAdd" *ngIf="!isShowAdd" (click)="isShowAdd = !isShowAdd">Show Add</button>
+<button id="btnHideAdd" *ngIf="isShowAdd" (click)="isShowAdd = !isShowAdd">Hide Add</button>
+<br>
+<div *ngIf="isShowAdd">
+  Add Item
+  <br>
+  <app-item></app-item>
+</div>
+
+<br> All Items
 <app-item-list></app-item-list>
-<app-item></app-item>
