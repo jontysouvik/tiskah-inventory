@@ -12,29 +12,71 @@ export class ItemListComponent implements OnInit {
 
   itemsCol: AngularFirestoreCollection<Item>;
   items: Observable<Item[]>;
-  filterType: number;
-  @Output() itemSelected = new EventEmitter();
+  filterType: string;
+  itemButtonlist: any[] = [
+    { title: 'All', filter: 'all' },
+    { title: 'Earrings', filter: 'earrings' },
+    { title: 'Neck piece', filter: 'neckpiece' },
+    { title: 'Bracelet', filter: 'bracelet' },
+    { title: 'Other', filter: 'other' }];
   constructor(private afs: AngularFirestore) { }
 
   ngOnInit() {
     this.itemsCol = this.afs.collection('items');
     this.items = this.itemsCol.valueChanges();
-    this.filterType = 1;
+    this.filterType = 'all';
   }
-  filter(item: Item) {
-    // let retVal: boolean;
-    // switch (this.filterType) {
-    //   case 1:
-    //     {
-    //       if (parseInt(item.stock.toString(), 10) > 0) {
-    //         retVal = true;
-    //       } else {
-    //         retVal = false;
-    //       }
-    //     }
-    //     break;
-    // }
-    return true;
+  setFilter(filter) {
+    this.filterType = filter;
+  }
+  filterItemType(item: Item) {
+    let retVal: boolean;
+    switch (this.filterType) {
+      case 'earrings':
+        {
+          if (item.id.substring(0, 1).toLowerCase() === 'e') {
+            retVal = true;
+          } else {
+            retVal = false;
+          }
+        }
+        break;
+        case 'neckpiece':
+        {
+          if (item.id.substring(0, 1).toLowerCase() === 'n') {
+            retVal = true;
+          } else {
+            retVal = false;
+          }
+        }
+        break;
+        case 'bracelet':
+        {
+          if (item.id.substring(0, 1).toLowerCase() === 'b') {
+            retVal = true;
+          } else {
+            retVal = false;
+          }
+        }
+        break;
+        case 'other':
+        {
+          if (item.id.substring(0, 1).toLowerCase() !== 'e' &&
+              item.id.substring(0, 1).toLowerCase() !== 'n' &&
+              item.id.substring(0, 1).toLowerCase() !== 'b') {
+            retVal = true;
+          } else {
+            retVal = false;
+          }
+        }
+        break;
+        case 'all':
+        {
+          retVal = true;
+        }
+        break;
+    }
+    return retVal;
   }
   setEdit(item: Item) {
     console.log(item);
