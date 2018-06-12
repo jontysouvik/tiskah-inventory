@@ -41,7 +41,7 @@ export class ItemListComponent implements OnInit {
           }
         }
         break;
-        case 'neckpiece':
+      case 'neckpiece':
         {
           if (item.id.substring(0, 1).toLowerCase() === 'n') {
             retVal = true;
@@ -50,7 +50,7 @@ export class ItemListComponent implements OnInit {
           }
         }
         break;
-        case 'bracelet':
+      case 'bracelet':
         {
           if (item.id.substring(0, 1).toLowerCase() === 'b') {
             retVal = true;
@@ -59,18 +59,18 @@ export class ItemListComponent implements OnInit {
           }
         }
         break;
-        case 'other':
+      case 'other':
         {
           if (item.id.substring(0, 1).toLowerCase() !== 'e' &&
-              item.id.substring(0, 1).toLowerCase() !== 'n' &&
-              item.id.substring(0, 1).toLowerCase() !== 'b') {
+            item.id.substring(0, 1).toLowerCase() !== 'n' &&
+            item.id.substring(0, 1).toLowerCase() !== 'b') {
             retVal = true;
           } else {
             retVal = false;
           }
         }
         break;
-        case 'all':
+      case 'all':
         {
           retVal = true;
         }
@@ -91,6 +91,13 @@ export class ItemListComponent implements OnInit {
       'price': item.price,
       'stock': item.stock,
       'timestamp': item.timestamp.toString()
+    });
+  }
+  onDelete(item: Item) {
+    this.afs.collection('items').doc(item.timestamp).delete().then(() => {
+      alert('Deleted Successfully');
+    }).catch((error) => {
+      alert(error);
     });
   }
 }

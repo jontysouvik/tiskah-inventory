@@ -18,20 +18,18 @@ export class ItemComponent implements OnInit {
   }
   onAdd() {
     const date = new Date();
-    let time = date.getTime().toString();
-    if (this.slectedItem.timestamp) {
-      time = this.slectedItem.timestamp;
-    }
+    const time = date.getTime().toString();
     this.afs.collection('items').doc(time).set({
       'id': this.slectedItem.id,
       'name': this.slectedItem.name,
       'price': this.slectedItem.price,
       'stock': this.slectedItem.stock,
       'timestamp': time.toString()
+    }).then(() => {
+      alert('Added Success Fully');
+      this.slectedItem = new Item();
+    }).catch((error) => {
+      alert(error);
     });
-  }
-  itemSelected(item: Item) {
-    console.log(item, 'Item Component');
-    this.slectedItem = item;
   }
 }
