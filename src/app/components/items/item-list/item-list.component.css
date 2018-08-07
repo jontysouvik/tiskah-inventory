@@ -4,6 +4,7 @@
   margin-right: 5px;
   margin-left: 5px;
 }
-input{
-  width: 100%;
+.in-stock
+{
+float: right;
 }

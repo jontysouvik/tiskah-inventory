@@ -13,6 +13,7 @@ export class ItemListComponent implements OnInit {
   itemsCol: AngularFirestoreCollection<Item>;
   items: Observable<Item[]>;
   filterType: string;
+  onlyShowInStockItems = true;
   itemButtonlist: any[] = [
     { title: 'All', filter: 'all' },
     { title: 'Earrings', filter: 'earrings' },
@@ -31,6 +32,11 @@ export class ItemListComponent implements OnInit {
   }
   filterItemType(item: Item) {
     let retVal: boolean;
+    if (this.onlyShowInStockItems) {
+      if (item.stock <= 0) {
+        return false;
+      }
+    }
     switch (this.filterType) {
       case 'earrings':
         {
@@ -76,6 +82,7 @@ export class ItemListComponent implements OnInit {
         }
         break;
     }
+
     return retVal;
   }
   setEdit(item: Item) {
@@ -99,5 +106,8 @@ export class ItemListComponent implements OnInit {
     }).catch((error) => {
       alert(error);
     });
+  }
+  onCancel(item: Item) {
+    item.isEdit = false;
   }
 }

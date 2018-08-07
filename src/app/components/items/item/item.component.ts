@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { AngularFireStorage } from 'angularfire2/storage';
 import { Item } from '../../../models/Item';
 import { Observable } from 'rxjs';
 
@@ -12,7 +13,11 @@ export class ItemComponent implements OnInit {
   itemsCol: AngularFirestoreCollection<Item>;
   items: Observable<Item[]>;
   slectedItem: Item = new Item();
-  constructor(private afs: AngularFirestore) { }
+  slectedFiles: FileList;
+  file: File;
+  imgsrc: Observable<string | null>;
+  uploadPercent;
+  constructor(private afs: AngularFirestore, private afst: AngularFireStorage) { }
 
   ngOnInit() {
   }
@@ -30,6 +35,23 @@ export class ItemComponent implements OnInit {
       this.slectedItem = new Item();
     }).catch((error) => {
       alert(error);
+    });
+  }
+  chooseFiles(event) {
+    this.slectedFiles = event.target.files;
+    if (this.slectedFiles.item(0)) {
+      this.uploadPic();
+    }
+  }
+  uploadPic() {
+    const file = this.slectedFiles.item(0);
+    const date = new Date();
+    const time = date.getTime().toString();
+    const fileName = 'IMG' + time + '.jpg';
+    const fileRef = this.afst.ref(fileName);
+    const uploadTask = this.afst.upload(fileName, file).then((data) => {
+      console.log(data);
+      this.imgsrc = fileRef.getDownloadURL();
     });
   }
 }

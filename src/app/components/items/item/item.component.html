@@ -6,4 +6,8 @@ Price: <input type="text" [(ngModel)] = 'slectedItem.price'>
 <br>
 Stock: <input type="text" [(ngModel)] = 'slectedItem.stock'>
 <br>
+<button (click)="fileInput.click()">Add Images</button>
+<input #fileInput type="file" (change)="chooseFiles($event)" style="display: none">
+<img src="{{imgsrc | async}}" height="200px" width="200px">
+<br>
 <button (click)="onAdd()">Add</button>

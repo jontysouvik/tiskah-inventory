@@ -1,6 +1,17 @@
 <div class="row">
   <div class="col-md-12">
     <div class="row">
+        <div class="col-md-9"></div>
+      <div class="col-md-3">
+        <input type="checkbox" name="onlyShowInStockItems" id="onlyShowInStockItems" [(ngModel)]="onlyShowInStockItems">
+        <label for="onlyShowInStockItems">Only Show in Stock</label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
       <div class="col-md-2" *ngFor="let button of itemButtonlist">
         <button (click)="setFilter(button.filter)">{{button.title}}</button>
       </div>
@@ -51,6 +62,7 @@
       <div class="col-md-3 col-3">
         <button (click)="onEdit(item)">Save</button>
         <button (click)="onDelete(item)">Delete</button>
+        <button (click)="onCancel(item)">Cancel</button>
       </div>
     </ng-container>
   </ng-container>
