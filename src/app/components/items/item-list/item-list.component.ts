@@ -97,13 +97,14 @@ export class ItemListComponent implements OnInit {
     if (!fromCode) {
       this.selectedItem.isEdit = false;
     }
+    console.log(this.selectedItem);
     this.afs.collection('items').doc(this.selectedItem.timestamp).set({
       'id': this.selectedItem.id,
       'name': this.selectedItem.name,
       'price': this.selectedItem.price,
       'stock': this.selectedItem.stock,
       'timestamp': this.selectedItem.timestamp.toString(),
-      'images': this.selectedItem.images
+      'images': this.selectedItem.images ? this.selectedItem.images : []
     });
   }
   onDelete() {
