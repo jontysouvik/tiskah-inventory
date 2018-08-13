@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <div class="row">
-        <div class="col-md-9"></div>
+      <div class="col-md-9"></div>
       <div class="col-md-3">
         <input type="checkbox" name="onlyShowInStockItems" id="onlyShowInStockItems" [(ngModel)]="onlyShowInStockItems">
         <label for="onlyShowInStockItems">Only Show in Stock</label>
@@ -20,28 +20,37 @@
 </div>
 <div class="row">
   <div class="col-md-2 col-2">
-    <h4>Code</h4>
-  </div>
-  <div class="col-md-3 col-3">
-    <h4>Name</h4>
+    <strong>Code</strong>
   </div>
   <div class="col-md-2 col-2">
-    <h4>Price</h4>
+    <strong>Name</strong>
   </div>
   <div class="col-md-2 col-2">
-    <h4>Stock</h4>
+    <strong>Price</strong>
+  </div>
+  <div class="col-md-1 col-1">
+    <strong>Stock</strong>
+  </div>
+  <div class="col-md-2 col-2">
+    <strong>Images</strong>
   </div>
   <div class="col-md-3 col-3">
-    <h4>Action</h4>
+    <strong>Action</strong>
   </div>
 </div>
 <div class="row" *ngFor="let item of items | async">
   <ng-container *ngIf="filterItemType(item)">
     <ng-container *ngIf="!item.isEdit">
       <div class="col-md-2 col-2">{{item.id}}</div>
-      <div class="col-md-3 col-3">{{item.name}}</div>
+      <div class="col-md-2 col-2">{{item.name}}</div>
       <div class="col-md-2 col-2">{{item.price}}</div>
-      <div class="col-md-2 col-2">{{item.stock}}</div>
+      <div class="col-md-1 col-1">{{item.stock}}</div>
+      <div class="col-md-2 col-2">
+        <ng-container *ngIf="item.images">
+          <img *ngFor="let imgsrc of item.images" src="../../../../assets/download.png" height="30px" width="30px" alt="" (click)="getDownloadUrl(img, imgsrc)"
+            #img>
+        </ng-container>
+      </div>
       <div class="col-md-3 col-3">
         <button (click)="setEdit(item)">Edit</button>
       </div>
@@ -50,15 +59,21 @@
       <div class="col-md-2 col-2">
         <input type="text" [(ngModel)]="item.id">
       </div>
-      <div class="col-md-3 col-3">
+      <div class="col-md-2 col-2">
         <input type="text" [(ngModel)]="item.name">
       </div>
       <div class="col-md-2 col-2">
         <input type="text" [(ngModel)]="item.price">
       </div>
-      <div class="col-md-2 col-2">
+      <div class="col-md-1 col-1">
         <input type="text" [(ngModel)]="item.stock">
       </div>
+      <div class="col-md-2 col-2">
+          <img *ngFor="let imgsrc of item.images" src="../../../../assets/delete.png" height="30px" width="30px" alt="" (click)="deleteImage(img, imgsrc)"
+            #img>
+            <input #fileInput type="file" (change)="chooseFiles($event)" style="display: none">
+            <button (click)="fileInput.click()">Add Images</button>
+        </div>
       <div class="col-md-3 col-3">
         <button (click)="onEdit(item)">Save</button>
         <button (click)="onDelete(item)">Delete</button>

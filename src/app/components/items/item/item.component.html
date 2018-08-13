@@ -8,6 +8,7 @@ Stock: <input type="text" [(ngModel)] = 'slectedItem.stock'>
 <br>
 <button (click)="fileInput.click()">Add Images</button>
 <input #fileInput type="file" (change)="chooseFiles($event)" style="display: none">
-<img src="{{imgsrc | async}}" height="200px" width="200px">
+
+<img *ngFor="let image of images" [src]="image" height="200px" width="200px" (click)="downloadImage(image)">
 <br>
 <button (click)="onAdd()">Add</button>

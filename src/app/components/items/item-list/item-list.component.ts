@@ -1,8 +1,8 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { AngularFireStorage } from 'angularfire2/storage';
 import { Item } from '../../../models/Item';
 import { Observable } from 'rxjs';
-// import 'rxjs/add/operator/map';
 @Component({
   selector: 'app-item-list',
   templateUrl: './item-list.component.html',
@@ -20,7 +20,11 @@ export class ItemListComponent implements OnInit {
     { title: 'Neck piece', filter: 'neckpiece' },
     { title: 'Bracelet', filter: 'bracelet' },
     { title: 'Other', filter: 'other' }];
-  constructor(private afs: AngularFirestore) { }
+  slectedFiles: FileList;
+  file: File;
+  imgsrc: Observable<string | null>;
+  selectedItem: Item = null;
+  constructor(private afs: AngularFirestore, private storage: AngularFireStorage) { }
 
   ngOnInit() {
     this.itemsCol = this.afs.collection('items');
@@ -32,7 +36,7 @@ export class ItemListComponent implements OnInit {
   }
   filterItemType(item: Item) {
     let retVal: boolean;
-    if (this.onlyShowInStockItems) {
+    if (this.onlyShowInStockItems && !item.isEdit) {
       if (item.stock <= 0) {
         return false;
       }
@@ -86,28 +90,77 @@ export class ItemListComponent implements OnInit {
     return retVal;
   }
   setEdit(item: Item) {
-    console.log(item);
-    // this.items.forEach((list) => console.log(list));
     item.isEdit = true;
+    this.selectedItem = item;
   }
-  onEdit(item: Item) {
-    item.isEdit = false;
-    this.afs.collection('items').doc(item.timestamp).set({
-      'id': item.id,
-      'name': item.name,
-      'price': item.price,
-      'stock': item.stock,
-      'timestamp': item.timestamp.toString()
+  onEdit(fromCode?: boolean) {
+    if (!fromCode) {
+      this.selectedItem.isEdit = false;
+    }
+    this.afs.collection('items').doc(this.selectedItem.timestamp).set({
+      'id': this.selectedItem.id,
+      'name': this.selectedItem.name,
+      'price': this.selectedItem.price,
+      'stock': this.selectedItem.stock,
+      'timestamp': this.selectedItem.timestamp.toString(),
+      'images': this.selectedItem.images
     });
   }
-  onDelete(item: Item) {
-    this.afs.collection('items').doc(item.timestamp).delete().then(() => {
+  onDelete() {
+    for (let index = 0; index < this.selectedItem.images.length; index++) {
+      const name = this.selectedItem.images[index];
+      const fileRef = this.storage.ref(name);
+      fileRef.delete();
+    }
+    this.afs.collection('items').doc(this.selectedItem.timestamp).delete().then(() => {
       alert('Deleted Successfully');
     }).catch((error) => {
       alert(error);
     });
   }
-  onCancel(item: Item) {
-    item.isEdit = false;
+  onCancel() {
+    this.selectedItem.isEdit = false;
+    this.selectedItem = null;
+  }
+  getDownloadUrl(img, name) {
+    img.src = '../../../../assets/loading.gif';
+    const ref = this.storage.ref(name);
+    ref.getDownloadURL().toPromise().then((url) => {
+      img.src = url;
+    });
+  }
+  deleteImage(img, name) {
+    if (img.src.toString().indexOf('delete') > -1) {
+      this.getDownloadUrl(img, name);
+    } else {
+      this.selectedItem.images.splice(this.selectedItem.images.length - 1, 1);
+      const fileRef = this.storage.ref(name);
+      fileRef.delete().toPromise().then(() => {
+        this.onEdit(true);
+      });
+    }
+
+  }
+  chooseFiles(event) {
+    this.slectedFiles = event.target.files;
+    if (this.slectedFiles.item(0)) {
+      this.uploadPic();
+    }
+  }
+  uploadPic() {
+    const file = this.slectedFiles.item(0);
+    const date = new Date();
+    const time = date.getTime().toString();
+    const fileName = 'IMG' + time + '.jpg';
+    const fileRef = this.storage.ref(fileName);
+    this.storage.upload(fileName, file).then((data) => {
+      fileRef.getDownloadURL().toPromise().then((url) => {
+        if (!this.selectedItem.images) {
+          this.selectedItem.images = [];
+        }
+        this.selectedItem.images.push(fileName);
+        this.onEdit(true);
+      });
+    });
   }
 }

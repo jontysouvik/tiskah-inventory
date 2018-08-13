@@ -17,6 +17,8 @@ export class ItemComponent implements OnInit {
   file: File;
   imgsrc: Observable<string | null>;
   uploadPercent;
+  images: string[] = [];
+  imageNames: string[] = [];
   constructor(private afs: AngularFirestore, private afst: AngularFireStorage) { }
 
   ngOnInit() {
@@ -29,16 +31,19 @@ export class ItemComponent implements OnInit {
       'name': this.slectedItem.name,
       'price': this.slectedItem.price,
       'stock': this.slectedItem.stock,
-      'timestamp': time.toString()
+      'timestamp': time.toString(),
+      'images': this.imageNames
     }).then(() => {
       alert('Added Success Fully');
       this.slectedItem = new Item();
+      this.images = [];
     }).catch((error) => {
       alert(error);
     });
   }
   chooseFiles(event) {
     this.slectedFiles = event.target.files;
+    this.images.push('../../../../assets/loading.gif');
     if (this.slectedFiles.item(0)) {
       this.uploadPic();
     }
@@ -49,9 +54,12 @@ export class ItemComponent implements OnInit {
     const time = date.getTime().toString();
     const fileName = 'IMG' + time + '.jpg';
     const fileRef = this.afst.ref(fileName);
-    const uploadTask = this.afst.upload(fileName, file).then((data) => {
-      console.log(data);
-      this.imgsrc = fileRef.getDownloadURL();
+    this.afst.upload(fileName, file).then((data) => {
+      fileRef.getDownloadURL().toPromise().then((url) => {
+        this.imageNames.push(fileName);
+        this.images.splice(this.images.length - 1, 1);
+        this.images.push(url);
+      });
     });
   }
 }

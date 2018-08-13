@@ -5,4 +5,5 @@ export class Item {
   public stock: number;
   public timestamp: string;
   public isEdit: boolean;
+  public images: string[];
 }

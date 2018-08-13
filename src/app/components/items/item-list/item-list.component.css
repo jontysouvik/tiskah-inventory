@@ -1,10 +1,14 @@
-.col-md-3 .col-md-2 .col-md-1{
+.col-md-3 .col-md-2 .col-md-1 {
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 5px;
   margin-left: 5px;
 }
-.in-stock
-{
-float: right;
+
+.in-stock {
+  float: right;
+}
+
+input[type=text] {
+  width: 100%;
 }
