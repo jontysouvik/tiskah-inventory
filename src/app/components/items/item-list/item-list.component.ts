@@ -23,7 +23,6 @@ export class ItemListComponent implements OnInit {
   slectedFiles: FileList;
   file: File;
   imgsrc: Observable<string | null>;
-  selectedItem: Item = null;
   constructor(private afs: AngularFirestore, private storage: AngularFireStorage) { }
 
   ngOnInit() {
@@ -91,37 +90,34 @@ export class ItemListComponent implements OnInit {
   }
   setEdit(item: Item) {
     item.isEdit = true;
-    this.selectedItem = item;
   }
-  onEdit(fromCode?: boolean) {
+  onEdit(item: Item, fromCode?: boolean) {
     if (!fromCode) {
-      this.selectedItem.isEdit = false;
+      item.isEdit = false;
     }
-    console.log(this.selectedItem);
-    this.afs.collection('items').doc(this.selectedItem.timestamp).set({
-      'id': this.selectedItem.id,
-      'name': this.selectedItem.name,
-      'price': this.selectedItem.price,
-      'stock': this.selectedItem.stock,
-      'timestamp': this.selectedItem.timestamp.toString(),
-      'images': this.selectedItem.images ? this.selectedItem.images : []
+    this.afs.collection('items').doc(item.timestamp).set({
+      'id': item.id,
+      'name': item.name,
+      'price': item.price,
+      'stock': item.stock,
+      'timestamp': item.timestamp.toString(),
+      'images': item.images ? item.images : []
     });
   }
-  onDelete() {
-    for (let index = 0; index < this.selectedItem.images.length; index++) {
-      const name = this.selectedItem.images[index];
+  onDelete(item: Item) {
+    for (let index = 0; index < item.images.length; index++) {
+      const name = item.images[index];
       const fileRef = this.storage.ref(name);
       fileRef.delete();
     }
-    this.afs.collection('items').doc(this.selectedItem.timestamp).delete().then(() => {
+    this.afs.collection('items').doc(item.timestamp).delete().then(() => {
       alert('Deleted Successfully');
     }).catch((error) => {
       alert(error);
     });
   }
-  onCancel() {
-    this.selectedItem.isEdit = false;
-    this.selectedItem = null;
+  onCancel(item: Item) {
+    item.isEdit = false;
   }
   getDownloadUrl(img, name) {
     img.src = '../../../../assets/loading.gif';
@@ -130,25 +126,25 @@ export class ItemListComponent implements OnInit {
       img.src = url;
     });
   }
-  deleteImage(img, name) {
+  deleteImage(img, name, item) {
     if (img.src.toString().indexOf('delete') > -1) {
       this.getDownloadUrl(img, name);
     } else {
-      this.selectedItem.images.splice(this.selectedItem.images.length - 1, 1);
+      item.images.splice(item.images.length - 1, 1);
       const fileRef = this.storage.ref(name);
       fileRef.delete().toPromise().then(() => {
-        this.onEdit(true);
+        this.onEdit(item, true);
       });
     }
 
   }
-  chooseFiles(event) {
+  chooseFiles(event, item) {
     this.slectedFiles = event.target.files;
     if (this.slectedFiles.item(0)) {
-      this.uploadPic();
+      this.uploadPic(item);
     }
   }
-  uploadPic() {
+  uploadPic(item) {
     const file = this.slectedFiles.item(0);
     const date = new Date();
     const time = date.getTime().toString();
@@ -156,11 +152,11 @@ export class ItemListComponent implements OnInit {
     const fileRef = this.storage.ref(fileName);
     this.storage.upload(fileName, file).then((data) => {
       fileRef.getDownloadURL().toPromise().then((url) => {
-        if (!this.selectedItem.images) {
-          this.selectedItem.images = [];
+        if (!item.images) {
+          item.images = [];
         }
-        this.selectedItem.images.push(fileName);
-        this.onEdit(true);
+        item.images.push(fileName);
+        this.onEdit(item, true);
       });
     });
   }

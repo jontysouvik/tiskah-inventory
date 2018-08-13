@@ -57,21 +57,21 @@
     </ng-container>
     <ng-container *ngIf="item.isEdit">
       <div class="col-md-2 col-2">
-        <input type="text" [(ngModel)]="selectedItem.id">
+        <input type="text" [(ngModel)]="item.id">
       </div>
       <div class="col-md-2 col-2">
-        <input type="text" [(ngModel)]="selectedItem.name">
+        <input type="text" [(ngModel)]="item.name">
       </div>
       <div class="col-md-2 col-2">
-        <input type="text" [(ngModel)]="selectedItem.price">
+        <input type="text" [(ngModel)]="item.price">
       </div>
       <div class="col-md-1 col-1">
-        <input type="text" [(ngModel)]="selectedItem.stock">
+        <input type="text" [(ngModel)]="item.stock">
       </div>
       <div class="col-md-2 col-2">
-          <img *ngFor="let imgsrc of selectedItem.images" src="../../../../assets/delete.png" height="30px" width="30px" alt="" (click)="deleteImage(img, imgsrc)"
+          <img *ngFor="let imgsrc of item.images" src="../../../../assets/delete.png" height="30px" width="30px" alt="" (click)="deleteImage(img, imgsrc, item)"
             #img>
-            <input #fileInput type="file" (change)="chooseFiles($event)" style="display: none">
+            <input #fileInput type="file" (change)="chooseFiles($event,item)" style="display: none">
             <button (click)="fileInput.click()">Add Images</button>
         </div>
       <div class="col-md-3 col-3">
